@@ -9,7 +9,7 @@ Now av-update support [Dr.Web CureIt!](http://www.freedrweb.com/cureit/) and [AV
 Put this script to some directory (must be in $PATH) and run it.
 I recommerd add av-update to crontab
 
-Збережіть скрипт в теку, яка належить змінній $PATH та виконайте
+Збережіть скрипт в теку, яка належить змінній $PATH та виконайте.
 Рекомендую додати також до crontab
 
 ## Distribution / Розповсюдження
