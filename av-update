@@ -1,0 +1,72 @@
+#!/bin/sh
+
+#######################################
+# Automatic antivirus update tool for #
+# dr.Web CureIt! and AVZ              #
+# Author: Andrij Kondratiev           #
+# Site: https://github.com/keedhost   #
+# Version: 0.1β                       #
+#######################################
+
+ANTIVIR_DIR="$HOME/antiviruses"
+CUREIT_DIST_DIR="$ANTIVIR_DIR/cureit"
+CUREIT_FILE="launch.exe"
+CUREIT_FTP="ftp://ftp.drweb.com/pub/drweb/cureit"
+
+AVZ_DIST_DIR="$ANTIVIR_DIR/avz"
+AVZ_URL="http://z-oleg.com"
+AVZ_PROG_FILE="avz4.zip"
+AVZ_BASES_FILE="secur/avz_up/avzbase.zip"
+
+
+if [ ! -d "$ANTIVIR_DIR" ]; then
+	mkdir "$ANTIVIR_DIR"
+fi
+
+if [ ! -d "$CUREIT_DIST_DIR" ]; then
+	mkdir "$CUREIT_DIST_DIR"
+fi
+
+if [ ! -d "$AVZ_DIST_DIR" ]; then
+	mkdir "$AVZ_DIST_DIR"
+fi
+
+
+function get_cureit() {
+	if [ -f "CUREIT_DIST_DIR/$CUREIT_FILE" ]; then
+		echo "Deleting old file"
+		rm -f "CUREIT_DIST_DIR/$CUREIT_FILE"
+		echo "Downloading new file"
+		wget "$CUREIT_FTP/$CUREIT_FILE" -O "$CUREIT_DIST_DIR/$CUREIT_FILE"
+		echo "DrWeb CureIt was updated"
+	else
+		echo "Downloading new file"
+		wget "$CUREIT_FTP/$CUREIT_FILE" -O "$CUREIT_DIST_DIR/$CUREIT_FILE"
+		echo "DrWeb CureIt was updated"
+	fi
+}
+
+function get_avz() {
+	# Back up previous version / зберігаємо попередню версію:
+	mv $AVZ_DIST_DIR/$AVZ_PROG_FILE $AVZ_DIST_DIR/$AVZ_PROG_FILE.old
+	mv $AVZ_DIST_DIR/avzbase.zip $AVZ_DIST_DIR/avzbase.zip.old
+		if [ $AVZ_DIST_DIR/avz_`date +%F`.zip ]; then
+			mv "$AVZ_DIST_DIR/avz_`date +%F`.zip" "$AVZ_DIST_DIR/avz_`date +%F`.zip.old"
+		fi
+	rm -Rf $AVZ_DIST_DIR/avz4
+	
+	# Downloading latest version of avz and bases / завантажуємо останній avz та бази до нього:
+	wget $AVZ_URL/$AVZ_PROG_FILE -O $AVZ_DIST_DIR/$AVZ_PROG_FILE
+	wget $AVZ_URL/$AVZ_BASES_FILE -O $AVZ_DIST_DIR/avzbase.zip
+	unzip $AVZ_DIST_DIR/$AVZ_PROG_FILE -d $AVZ_DIST_DIR/
+	rm -Rf $AVZ_DIST_DIR/avz4/Base/*
+	unzip $AVZ_DIST_DIR/avzbase.zip -d $AVZ_DIST_DIR/avz4/Base/
+	cd $AVZ_DIST_DIR && zip -r $AVZ_DIST_DIR/avz_`date +%F`.zip avz4/
+	rm -Rf $AVZ_DIST_DIR/avzbase.zip.old \
+		$AVZ_DIST_DIR/$AVZ_PROG_FILE.old \
+		"$AVZ_DIST_DIR/avz_`date +%F`.zip.old" \
+		$AVZ_DIST_DIR/avz4
+}
+get_cureit
+get_avz
+sleep 1
