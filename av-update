@@ -10,7 +10,7 @@
 
 ANTIVIR_DIR="$HOME/antiviruses"
 CUREIT_DIST_DIR="$ANTIVIR_DIR/cureit"
-CUREIT_FILE="launch.exe"
+CUREIT_FILE="cureit.exe"
 CUREIT_FTP="ftp://ftp.drweb.com/pub/drweb/cureit"
 
 AVZ_DIST_DIR="$ANTIVIR_DIR/avz"
